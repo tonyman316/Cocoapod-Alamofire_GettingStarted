@@ -42,7 +42,7 @@ public class PickFlavorViewController: UIViewController {
     loadFlavors()
   }
 
-  // *******
+  // ******
   fileprivate func loadFlavors() {
     // 1
     Alamofire.request(
