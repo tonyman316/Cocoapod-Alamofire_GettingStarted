@@ -22,6 +22,7 @@
 
 import UIKit
 import Alamofire
+import MBProgressHUD
 
 public class PickFlavorViewController: UIViewController {
 
@@ -42,8 +43,9 @@ public class PickFlavorViewController: UIViewController {
     loadFlavors()
   }
 
-  // ******
+//   ******
   fileprivate func loadFlavors() {
+    showLoadingHUD()  // not in closure, don't need self.
     // 1
     Alamofire.request(
       "https://www.raywenderlich.com/downloads/Flavors.plist",
@@ -52,6 +54,7 @@ public class PickFlavorViewController: UIViewController {
         [weak self] response in
         // 2
         guard let strongSelf = self else {return}
+        strongSelf.hideLoadingHUD() // self.hideLoadingHUD
         // 3
         guard response.result.isSuccess,
         let dictionaryArray = response.result.value as? [[String:String]] else {
@@ -64,6 +67,15 @@ public class PickFlavorViewController: UIViewController {
         strongSelf.collectionView.reloadData()  // use outlets
         strongSelf.selectFirstFlavor()  // call next func
     }
+  }
+  
+  private func showLoadingHUD(){
+    let hud = MBProgressHUD.showAdded(to: contentView, animated: true)
+    hud.label.text = "Loading....."
+  }
+  
+  private func hideLoadingHUD(){
+    MBProgressHUD.hide(for: contentView, animated: true)
   }
   
   fileprivate func selectFirstFlavor() {
